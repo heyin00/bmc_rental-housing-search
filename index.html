@@ -5,6 +5,46 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>부산도시공사 임대주택 조회</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCqd2ALBbwO8fKbrv0xxAyk6t8FkS78Luc",
+    authDomain: "bmc-housing.firebaseapp.com",
+    databaseURL: "https://bmc-housing-default-rtdb.firebaseio.com",
+    projectId: "bmc-housing",
+    storageBucket: "bmc-housing.firebasestorage.app",
+    messagingSenderId: "364333533182",
+    appId: "1:364333533182:web:069bde283f20b5b65862af"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getDatabase(app);
+  const noticesRef = ref(db, "notices");
+
+  // 실시간 수신
+  window._fbReady = true;
+  onValue(noticesRef, (snapshot) => {
+    const data = snapshot.val();
+    const notices = data
+      ? Object.entries(data).map(([id, v]) => ({id, ...v})).reverse()
+      : [];
+    window._renderFirebaseNotices(notices);
+  });
+
+  // 등록
+  window._fbSaveNotice = (dept, text) => {
+    const now = new Date();
+    const date = `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2,"0")}`;
+    push(noticesRef, {dept, text, date});
+  };
+
+  // 삭제
+  window._fbDeleteNotice = (id) => {
+    remove(ref(db, "notices/" + id));
+  };
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -329,16 +369,14 @@ function goBack() {
 }
 
 /* ── NOTICE ── */
-function getNotices() { try { return JSON.parse(localStorage.getItem("bmc_notices")||"[]"); } catch { return []; } }
-function saveNotices(a) { localStorage.setItem("bmc_notices", JSON.stringify(a)); }
-function renderNotices() {
-  const list = document.getElementById("noticeList");
+// ── Firebase 게시판 ──
+window._renderFirebaseNotices = function(notices) {
+  const list  = document.getElementById("noticeList");
   const empty = document.getElementById("noticeEmpty");
-  const notices = getNotices();
   list.querySelectorAll(".notice-item").forEach(el => el.remove());
   if (!notices.length) { empty.style.display = ""; return; }
   empty.style.display = "none";
-  notices.forEach((n, i) => {
+  notices.forEach((n) => {
     const ds = DEPT_STYLE[n.dept] || {bg:"#E5E7EB",color:"#374151"};
     const div = document.createElement("div");
     div.className = "notice-item";
@@ -348,11 +386,14 @@ function renderNotices() {
         <div class="notice-item-text">${esc(n.text)}</div>
         <div class="notice-item-meta">${n.date}</div>
       </div>
-      <button class="notice-item-del" onclick="deleteNotice(${i})">×</button>`;
+      <button class="notice-item-del" onclick="deleteNotice('${n.id}')">×</button>`;
     list.appendChild(div);
   });
+};
+function renderNotices() {} // Firebase onValue가 자동 렌더
+function deleteNotice(id) {
+  if (window._fbDeleteNotice) window._fbDeleteNotice(id);
 }
-function deleteNotice(i) { const a = getNotices(); a.splice(i,1); saveNotices(a); renderNotices(); }
 function openModal() { document.getElementById("modalBg").classList.add("open"); document.getElementById("noticeText").value = ""; }
 function closeModal() { document.getElementById("modalBg").classList.remove("open"); }
 function closeModalOutside(e) { if (e.target === document.getElementById("modalBg")) closeModal(); }
@@ -360,11 +401,8 @@ function saveNotice() {
   const dept = document.getElementById("noticeDept").value;
   const text = document.getElementById("noticeText").value.trim();
   if (!text) { alert("이슈 내용을 입력해주세요."); return; }
-  const a = getNotices();
-  const now = new Date();
-  const date = `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2,"0")}`;
-  a.unshift({dept, text, date});
-  saveNotices(a); renderNotices(); closeModal();
+  if (window._fbSaveNotice) window._fbSaveNotice(dept, text);
+  closeModal();
 }
 
 /* ── 자동완성 ── */
