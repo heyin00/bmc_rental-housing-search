@@ -197,11 +197,11 @@ header:hover .header-home-hint{opacity:1;}
 </header>
 
 <div class="main-wrap">
-
-  <!-- 뒤로가기 -->
+<!-- 뒤로가기 -->
   <button class="back-btn" id="backBtn" onclick="goBack()">← 뒤로가기</button>
 
-  <!-- 1. 검색 -->
+  
+<!-- 1. 검색 -->
   <div class="search-section" id="searchSection">
     <div class="search-label">🔍 임대주택 검색</div>
     <div class="search-row">
@@ -242,7 +242,7 @@ header:hover .header-home-hint{opacity:1;}
   <!-- 2. 결과 -->
   <div id="resultsSection" class="results-section" style="display:none"></div>
 
-  <!-- 3. 게시판 -->
+<!-- 3. 게시판 -->
   <div class="notice-board" id="noticeBoard">
     <div class="notice-header">
       <div class="notice-header-left">
@@ -259,7 +259,8 @@ header:hover .header-home-hint{opacity:1;}
     </div>
   </div>
 
-  <!-- 4. 범례 -->
+  
+<!-- 4. 범례 -->
   <div class="legend-bar" id="legendBar">
     <div class="legend-section-title">부서별 임대유형</div>
     <div class="legend-group">
@@ -287,6 +288,31 @@ header:hover .header-home-hint{opacity:1;}
         <span class="legend-badge" style="background:#16A34A;color:#fff;">영구임대</span>
       </div>
     </div>
+  </div>
+
+
+  
+<!-- 오늘의 한 문장 -->
+  <div id="quoteBox" style="background:linear-gradient(135deg,#C9D6FF 0%,#E2E2E2 100%);border-radius:14px;box-shadow:var(--shadow);padding:20px 26px;position:relative;overflow:hidden;">
+    <div style="position:absolute;right:-10px;top:-10px;font-size:80px;opacity:0.15;color:#A89BD4;line-height:1;">❝</div>
+    <div style="font-size:11px;font-weight:600;color:#6B7280;letter-spacing:1px;margin-bottom:12px;" id="quoteDate"></div>
+    <div style="font-size:14px;font-weight:500;color:#1A2840;line-height:1.8;margin-bottom:10px;" id="quoteText"></div>
+    <div style="font-size:12px;color:#1A2840;text-align:right;opacity:0.75;" id="quoteAuthor"></div>
+  </div>
+
+  
+  <!-- 문의 박스 -->
+  <div style="background:white;border-radius:14px;box-shadow:var(--shadow);border:1px solid var(--bmc-border);padding:16px 22px;display:flex;align-items:center;gap:10px;">
+    <span style="font-size:18px;">🐰</span>
+    <div style="font-size:13px;color:var(--text-secondary);line-height:1.8;">
+      <span style="font-weight:700;color:var(--text-primary);">업데이트 · 정보 수정 문의 🖥️</span><br>
+      맞춤임대부 <span style="font-weight:700;color:var(--bmc-blue);">박혜인</span>&nbsp;<span style="background:var(--bmc-light);color:var(--bmc-blue);padding:2px 10px;border-radius:6px;font-weight:700;font-size:13px;">305</span>
+    </div>
+  </div>
+
+  <div style="text-align:center;padding:4px 0 20px;font-size:12px;color:#9BA8BA;letter-spacing:0.3px;line-height:2;">
+    임대요정 ver2.0<br>
+    마지막 업데이트 26.06.26
   </div>
 
 </div>
@@ -586,11 +612,24 @@ function hl(text, q) {
 }
 
 document.addEventListener("click", e => { if (!e.target.closest(".search-input-wrap")) hideAC(); });
+
+// ── 오늘의 한 문장 ──
+(function() {
+  const QUOTES = [["어둠 속에서도 빛을 찾을 수 있다. 불을 켜는 법을 기억하는 사람에게만.", "해리포터 - 덤블도어"], ["우리가 선택하는 것이 우리가 누구인지를 보여준다. 우리에게 주어진 능력보다 훨씬 더.", "해리포터 - 덤블도어"], ["행복은 항상 찾을 수 있어. 그걸 찾으려는 노력이 필요하지.", "해리포터 - 덤블도어"], ["죽음을 두려워하는 것만큼 살아가지 않는 것도 용기가 필요하다.", "해리포터 - 시리우스 블랙"], ["두려움은 어둠이 아니야. 두려움은 어둠을 향해 돌아서는 것이야.", "해리포터 - 루핀 교수"], ["나는 아이언맨이다.", "어벤져스 - 토니 스타크"], ["최선을 다했어. 그게 내가 할 수 있는 전부야.", "어벤져스 - 캡틴 아메리카"], ["강해지려면 희생이 필요하다.", "어벤져스 - 타노스"], ["우리가 모두 작은 영웅이 될 수 있어. 슈트가 없어도.", "앤트맨"], ["당신은 특별한 존재야. 하지만 모두가 특별하면 아무도 특별하지 않아.", "인크레더블 - 신드롬"], ["나는 괜찮아. 항상 괜찮아.", "가디언즈 오브 갤럭시 - 피터 퀼"], ["삶은 초콜릿 상자 같은 거야. 어떤 게 나올지 절대 모르거든.", "포레스트 검프"], ["달려! 포레스트, 달려!", "포레스트 검프"], ["넌 이미 답을 알고 있어. 그냥 솔직해지기 두려운 거야.", "매트릭스 - 오라클"], ["선택받은 자란 없어. 다만 선택하는 자가 있을 뿐이야.", "매트릭스"], ["왜 넘어지는 걸까요? 다시 일어나는 법을 배우기 위해서죠.", "배트맨 비긴즈 - 알프레드"], ["영웅이 되고 싶지 않아. 그냥 내가 되고 싶을 뿐이야.", "스파이더맨 - 피터 파커"], ["큰 힘에는 큰 책임이 따른다.", "스파이더맨 - 벤 삼촌"], ["사람들이 당신을 믿지 않을 때, 당신이 그들을 믿어주면 된다.", "원더우먼"], ["과거는 바꿀 수 없어. 미래만 바꿀 수 있지.", "엑스맨 - 찰스 자비에"], ["어제 일어난 일은 역사고, 내일 일어날 일은 미스터리야. 오늘은 선물이지.", "쿵푸팬더 - 우그웨이"], ["한계란 없어. 오직 네가 만든 한계만 있을 뿐.", "쿵푸팬더 - 우그웨이"], ["행복한 척하다 보면 진짜 행복해져.", "위 아 더 밀러스"], ["당신이 생각하는 것보다 더 용감하고, 보이는 것보다 더 강하며, 느끼는 것보다 더 똑똑해.", "곰돌이 푸"], ["오늘 하루가 얼마나 어려웠든, 내일은 항상 다시 시작할 수 있어.", "곰돌이 푸"], ["진짜 용기는 두렵지 않은 게 아니야. 두려워도 행동하는 거지.", "라이온 킹 - 무파사"], ["과거는 잊어. 현재에 살아. 미래를 믿어.", "라이온 킹"], ["To infinity and beyond!", "토이스토리 - 버즈"], ["누군가 나를 좋아해 주길 기다리지 마. 네가 먼저 좋아해.", "러브 액츄얼리"], ["카르페 디엠. 오늘을 살아라.", "죽은 시인의 사회 - 키팅 선생님"], ["오 선장님, 나의 선장님.", "죽은 시인의 사회"], ["아무것도 하지 않으면 아무 일도 일어나지 않아.", "예스맨 - 짐 캐리"], ["당신 인생의 주인공은 당신이야. 감독도 당신이고.", "트루먼 쇼 - 트루먼"], ["안녕하세요, 제가 진짜 세상으로 나가도 될까요?", "트루먼 쇼 - 트루먼"], ["웃음을 잃으면 안 돼. 웃음이 있는 한 어떤 것도 견딜 수 있어.", "마스크 - 짐 캐리"], ["사랑은 어리석은 짓이 아니야. 어리석게 만들 뿐이지.", "이터널 선샤인"], ["행복의 반대말은 불행이 아니야. 무관심이야.", "아멜리에"], ["꿈꾸는 자만이 진실을 볼 수 있다.", "인셉션 - 코브"], ["생각이 현실이 되는 순간을 조심해라.", "인셉션"], ["모든 것이 끝났다고 생각할 때, 그것은 새로운 시작이야.", "인터스텔라 - 쿠퍼"], ["사랑은 시간과 공간을 초월한다.", "인터스텔라"], ["데이터는 거짓말하지 않아. 사람만 거짓말하지.", "머니볼"], ["사람은 좋아하는 것을 할 때 가장 빛난다.", "소울 - 22"], ["살아있다는 것 자체가 의미야.", "소울"], ["모든 순간이 소중해. 특별한 순간이 아니어도.", "소울 - 조"], ["나는 나쁜 놈이 아니야. 나는 그냥... 오해받고 있을 뿐이야.", "메가마인드"], ["포기하는 것도 용기야. 하지만 계속하는 것은 더 큰 용기야.", "록키"], ["내가 이긴 게 아니야. 포기하지 않은 거야.", "록키"], ["오늘 무너져도 괜찮아. 내일 다시 일어서면 되니까.", "록키 발보아"], ["당신의 이야기를 써라. 남의 이야기 속 조연이 되지 말고.", "월터의 상상은 현실이 된다"], ["내일은 내일의 태양이 뜬다.", "바람과 함께 사라지다 - 스칼렛"], ["어둠은 어둠으로 몰아낼 수 없어. 오직 빛만이 할 수 있지.", "마틴 루터 킹 Jr."], ["당신이 가장 두려워하는 것 안에 당신이 가장 원하는 것이 있다.", "해리포터"], ["말보다 행동이 훨씬 크게 말한다.", "마블 - 캡틴 아메리카"], ["인생은 짧아. 진짜 하고 싶은 걸 해.", "죽은 시인의 사회"], ["세상이 무대고, 우리 모두는 배우야.", "셰익스피어 - 뜻대로 하세요"], ["뭔가를 간절히 원하면 온 우주가 도와준다.", "파울로 코엘료 - 연금술사"], ["작은 일에도 최선을 다하면, 정성이 쌓여 큰일을 이룰 수 있다.", "채근담"], ["인생은 가까이서 보면 비극이지만, 멀리서 보면 희극이다.", "찰리 채플린"], ["당신이 할 수 있다고 믿든, 할 수 없다고 믿든, 믿는 대로 된다.", "헨리 포드"], ["천 리 길도 한 걸음부터.", "노자"], ["남을 아는 자는 지혜롭고, 자신을 아는 자는 밝다.", "노자"], ["지금 이 순간에 충실하라. 과거는 이미 지나갔고 미래는 아직 오지 않았다.", "붓다"], ["기회는 준비된 자에게만 찾아온다.", "루이 파스퇴르"], ["시작이 반이다.", "아리스토텔레스"], ["나무를 심기 가장 좋은 때는 20년 전이었다. 두 번째로 좋은 때는 바로 지금이다.", "중국 속담"], ["노력하는 자 위에 즐기는 자 있고, 즐기는 자 위에 미치는 자 있다.", "공자"], ["당신의 시간은 한정되어 있다. 다른 사람의 삶을 사느라 낭비하지 마라.", "스티브 잡스"], ["고요한 물이 깊게 흐른다.", "셰익스피어"], ["한 번도 실수하지 않은 사람은 한 번도 새로운 것을 시도하지 않은 사람이다.", "아인슈타인"], ["배움에는 끝이 없다.", "세네카"], ["성실함은 재능을 이긴다.", "스티븐 킹"], ["인생에서 가장 큰 영광은 한 번도 넘어지지 않는 것이 아니라, 넘어질 때마다 일어서는 것이다.", "넬슨 만델라"], ["가장 어두운 밤도 끝나고 태양은 뜬다.", "빅토르 위고"], ["실패는 성공의 어머니다.", "토마스 에디슨"], ["지식은 힘이다.", "프랜시스 베이컨"], ["기쁨은 나눌수록 커지고 슬픔은 나눌수록 작아진다.", "프랜시스 베이컨"], ["바람이 불지 않을 때 바람개비를 돌리는 법을 배워라.", "중국 속담"], ["꿈을 계속 간직하고 있으면 반드시 실현할 때가 온다.", "괴테"], ["어제로부터 배우고, 오늘을 살며, 내일을 향해 희망을 가져라.", "알베르트 아인슈타인"], ["행복은 우리가 얼마나 많이 가졌느냐가 아니라, 얼마나 적은 것으로도 만족할 수 있느냐에 달려 있다.", "공자"], ["모든 위대한 성취는 처음에 불가능해 보였다.", "넬슨 만델라"], ["산이 높을수록 골짜기도 깊다.", "한국 속담"], ["작은 친절이 세상을 아름답게 만든다.", "워즈워스"], ["완벽한 순간을 기다리지 마. 순간을 완벽하게 만들어.", "반지의 제왕 - 간달프"], ["모든 것이 사라지지 않아. 다만 형태가 바뀔 뿐이야.", "반지의 제왕"], ["희망이 있는 한 길은 있다.", "반지의 제왕 - 프로도"], ["변화는 두렵지 않아. 변하지 않는 것이 더 두렵지.", "나니아 연대기"], ["거울은 가장 충실한 친구야. 절대 거짓말하지 않거든.", "백설공주"], ["꿈을 꾸는 자만이 그 꿈을 이룰 수 있어.", "신데렐라"], ["두려움은 어디서나 찾아와. 하지만 용기는 그것을 뛰어넘는 거야.", "겨울왕국 - 안나"], ["진짜 사랑은 희생이야.", "겨울왕국 - 엘사"], ["앞으로 나아가는 유일한 방법은 과거를 놓아주는 거야.", "겨울왕국"], ["우리가 만나는 모든 사람은 우리가 모르는 전쟁을 치르고 있다. 그러니 친절하라.", "플라톤"]];
+  const now = new Date();
+  const y = String(now.getFullYear()).slice(2);
+  const m = String(now.getMonth()+1).padStart(2,'0');
+  const d = String(now.getDate()).padStart(2,'0');
+  const days = ['일','월','화','수','목','금','토'];
+  const day = days[now.getDay()];
+  document.getElementById('quoteDate').textContent = `${y}.${m}.${d} (${day}) 오늘의 한 문장`;
+  const idx = (now.getFullYear()*10000 + (now.getMonth()+1)*100 + now.getDate()) % QUOTES.length;
+  const [text, author] = QUOTES[idx];
+  document.getElementById('quoteText').textContent = `❝  ${text}  ❞`;
+  document.getElementById('quoteAuthor').textContent = `— ${author}`;
+})();
+
 renderNotices();
 </script>
-<div style="text-align:center;padding:16px 0 28px;font-size:10px;color:#C0C8D8;letter-spacing:0.3px;">
-  마지막 업데이트 26.06.25 by 박인턴
-</div>
-
 </body>
 </html>
