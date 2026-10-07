@@ -5,51 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>부산도시공사 임대주택 조회</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyCqd2ALBbwO8fKbrv0xxAyk6t8FkS78Luc",
-    authDomain: "bmc-housing.firebaseapp.com",
-    databaseURL: "https://bmc-housing-default-rtdb.firebaseio.com",
-    projectId: "bmc-housing",
-    storageBucket: "bmc-housing.firebasestorage.app",
-    messagingSenderId: "364333533182",
-    appId: "1:364333533182:web:069bde283f20b5b65862af"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db  = getDatabase(app);
-  const noticesRef = ref(db, "notices");
-
-  // 실시간 수신
-  window._fbReady = true;
-  onValue(noticesRef, (snapshot) => {
-    const data = snapshot.val();
-    const notices = data
-      ? Object.entries(data).map(([id, v]) => ({id, ...v})).reverse()
-      : [];
-    window._renderFirebaseNotices(notices);
-  });
-
-  // 등록
-  window._fbSaveNotice = (dept, text, author) => {
-    const now = new Date();
-    const date = `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2,"0")}`;
-    push(noticesRef, {dept, text, date, author});
-  };
-
-  // 삭제
-  window._fbDeleteNotice = (id) => {
-    remove(ref(db, "notices/" + id));
-  };
-</script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bmc-blue:#6D28D9; --bmc-sky:#DB2777; --bmc-green:#00A651;
-  --bmc-light:#FAF5FF; --bmc-bg:#F5F0FF; --bmc-border:#DDD6FE;
+  --bmc-blue:#1B3A6B; --bmc-sky:#2563EB; --bmc-green:#00A651;
+  --bmc-light:#EEF2FF; --bmc-bg:#F0F5FF; --bmc-border:#BFDBFE;
   --text-primary:#1A2840; --text-secondary:#5A6E8A;
   --shadow:0 2px 16px rgba(0,59,142,0.10);
   --shadow-lg:0 8px 40px rgba(0,59,142,0.16);
@@ -58,12 +19,12 @@
 body{font-family:"Noto Sans KR",sans-serif;background:var(--bmc-bg);color:var(--text-primary);min-height:100vh;}
 
 /* HEADER */
-header{background:#6D28D9;padding:0 32px;display:flex;align-items:center;gap:16px;height:64px;box-shadow:0 2px 12px rgba(0,0,0,0.18);position:sticky;top:0;z-index:100;cursor:pointer;}
+header{background:#1B3A6B;padding:0 32px;display:flex;align-items:center;gap:16px;height:64px;box-shadow:0 2px 12px rgba(0,0,0,0.18);position:sticky;top:0;z-index:100;cursor:pointer;}
 header:hover .header-home-hint{opacity:1;}
 .header-home-hint{opacity:0;transition:opacity .2s;font-size:11px;color:rgba(255,255,255,0.6);margin-left:4px;}
 .logo-bmc{font-size:22px;font-weight:900;color:white;letter-spacing:-0.5px;}
-.logo-bmc span{color:#F9A8D4;}
-.logo-kor{font-size:14px;font-weight:500;color:rgba(255,255,255,0.85);letter-spacing:1px;}
+.logo-bmc span{color:#93C5FD;}
+.logo-kor{font-size:14px;font-weight:500;color:rgba(255,255,255,0.75);letter-spacing:1px;}
 .header-divider{width:1px;height:28px;background:rgba(255,255,255,0.25);margin:0 8px;}
 .header-title{font-size:15px;font-weight:500;color:rgba(255,255,255,0.9);letter-spacing:0.5px;}
 
@@ -71,7 +32,7 @@ header:hover .header-home-hint{opacity:1;}
 
 /* 뒤로가기 버튼 */
 .back-btn{display:none;align-items:center;gap:8px;background:white;border:1.5px solid var(--bmc-border);border-radius:10px;padding:8px 16px;font-family:inherit;font-size:13px;font-weight:600;color:var(--text-secondary);cursor:pointer;align-self:flex-start;transition:all .2s;}
-.back-btn:hover{background:var(--bmc-light);border-color:var(--bmc-sky);color:var(--bmc-blue);}
+.back-btn:hover{background:#FFF8E7;border-color:#C0DDDA;color:#775537;}
 .back-btn.visible{display:flex;}
 
 /* SEARCH */
@@ -81,10 +42,10 @@ header:hover .header-home-hint{opacity:1;}
 .search-input-wrap{flex:1;position:relative;}
 .search-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:18px;color:var(--bmc-sky);pointer-events:none;}
 .search-input{width:100%;padding:14px 16px 14px 46px;border:2px solid var(--bmc-border);border-radius:12px;font-family:inherit;font-size:15px;color:var(--text-primary);outline:none;transition:border-color .2s,box-shadow .2s;background:#FAFCFF;}
-.search-input:focus{border-color:var(--bmc-sky);box-shadow:0 0 0 3px rgba(0,119,200,.12);background:white;}
+.search-input:focus{border-color:var(--bmc-sky);box-shadow:0 0 0 3px rgba(37,99,235,.15);background:white;}
 .search-input::placeholder{color:#A0AEC0;}
-.search-btn{padding:14px 28px;background:#6D28D9;border:none;border-radius:12px;font-family:inherit;font-size:15px;font-weight:700;color:white;cursor:pointer;transition:all .2s;white-space:nowrap;}
-.search-btn:hover{background:#DB2777;transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,59,142,.2);}
+.search-btn{padding:14px 28px;background:#1B3A6B;border:none;border-radius:12px;font-family:inherit;font-size:15px;font-weight:700;color:white;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.search-btn:hover{background:#0F2650;transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,59,142,.2);}
 .search-hint{margin-top:10px;font-size:12px;color:var(--text-secondary);}
 .search-hint span{background:var(--bmc-light);color:var(--bmc-blue);padding:2px 8px;border-radius:6px;font-weight:600;margin-right:4px;}
 .jeonse-notice{margin-top:8px;font-size:12px;color:#888;display:flex;align-items:center;gap:6px;}
@@ -96,7 +57,7 @@ header:hover .header-home-hint{opacity:1;}
 .filter-pill{padding:5px 13px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid transparent;transition:all .18s;opacity:0.5;}
 .filter-pill.active{opacity:1;box-shadow:0 2px 6px rgba(0,0,0,0.15);}
 .filter-pill-all{padding:5px 13px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid var(--bmc-border);background:white;color:var(--text-secondary);transition:all .18s;}
-.filter-pill-all.active{background:#6D28D9;color:white;border-color:#6D28D9;}
+.filter-pill-all.active{background:#1B3A6B;color:white;border-color:#1B3A6B;}
 .filter-sep{width:1px;height:22px;background:var(--bmc-border);margin:0 2px;}
 
 /* RESULTS */
@@ -122,7 +83,7 @@ header:hover .header-home-hint{opacity:1;}
 .no-result p{font-size:15px;font-weight:500;}
 
 /* AUTOCOMPLETE */
-.autocomplete-list{position:absolute;top:100%;left:0;right:0;background:white;border:1.5px solid var(--bmc-sky);border-top:none;border-radius:0 0 12px 12px;box-shadow:0 8px 30px rgba(0,59,142,.13);z-index:50;max-height:260px;overflow-y:auto;}
+.autocomplete-list{position:absolute;top:100%;left:0;right:0;background:white;border:1.5px solid #C0DDDA;border-top:none;border-radius:0 0 12px 12px;box-shadow:0 8px 30px rgba(0,59,142,.13);z-index:50;max-height:260px;overflow-y:auto;}
 .autocomplete-item{padding:10px 16px;cursor:pointer;font-size:14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #F0F4FA;transition:background .12s;}
 .autocomplete-item:last-child{border-bottom:none;}
 .autocomplete-item:hover{background:var(--bmc-light);}
@@ -131,7 +92,7 @@ header:hover .header-home-hint{opacity:1;}
 
 /* NOTICE */
 .notice-board{background:white;border-radius:14px;box-shadow:var(--shadow);border:1px solid var(--bmc-border);overflow:hidden;}
-.notice-header{background:#6D28D9;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;}
+.notice-header{background:#1B3A6B;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;}
 .notice-header-left{display:flex;align-items:center;gap:10px;}
 .notice-icon{width:30px;height:30px;background:rgba(255,255,255,0.15);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;}
 .notice-header h2{font-size:14px;font-weight:700;color:white;}
@@ -243,79 +204,35 @@ header:hover .header-home-hint{opacity:1;}
   <!-- 2. 결과 -->
   <div id="resultsSection" class="results-section" style="display:none"></div>
 
-<!-- 3. 게시판 -->
-  <div class="notice-board" id="noticeBoard">
-    <div class="notice-header">
-      <div class="notice-header-left">
-        <div class="notice-icon">📋</div>
-        <div>
-          <h2>부서별 이슈 공유 게시판</h2>
-          <p>누구나 수정 가능 · 전화 응대 시 참고용</p>
-        </div>
-      </div>
-      <button class="notice-add-btn" onclick="openModal()">＋ 추가</button>
+
+<!-- 오늘의 책 한줄 -->
+  <div id="bookSection" style="background:linear-gradient(135deg,#EEF2FF 0%,#DBEAFE 100%);border-radius:14px;border:0.5px solid #BFDBFE;overflow:hidden;margin-bottom:0;">
+    <div style="background:#1B3A6B;padding:13px 20px;display:flex;align-items:center;gap:10px;">
+      <span style="font-size:16px;">🧋</span>
+      <span style="font-size:14px;font-weight:600;color:white;">오늘의 책 한줄</span>
+      <span style="margin-left:auto;font-size:11px;color:rgba(255,255,255,0.55);" id="bookDate"></span>
     </div>
-    <div class="notice-list" id="noticeList">
-      <div class="notice-empty" id="noticeEmpty">등록된 이슈가 없습니다. 이슈를 추가해보세요.</div>
+    <div style="padding:22px 24px 20px;position:relative;">
+      <div style="position:absolute;top:14px;left:20px;font-size:52px;color:#BFDBFE;line-height:1;font-family:Georgia,serif;opacity:.6;">"</div>
+      <div style="font-size:15px;color:#1a1a1a;line-height:1.95;padding-left:28px;" id="bookText"></div>
+      <div style="font-size:11.5px;color:#6B7EA8;text-align:right;margin-top:14px;padding-top:12px;border-top:0.5px solid #BFDBFE;" id="bookAuthor"></div>
     </div>
   </div>
 
   
-<!-- 4. 범례 -->
-  <div class="legend-bar" id="legendBar">
-    <div class="legend-section-title">부서별 임대유형</div>
-    <div class="legend-group">
-      <span class="legend-dept-label" style="background:#EBF4FF;color:#003B8E;">맞춤임대부</span>
-      <div class="legend-types">
-        <span class="legend-badge" style="background:#1E3A8A;color:#fff;">매입임대</span>
-        <span class="legend-badge" style="background:#2563EB;color:#fff;">재개발임대</span>
-        <span class="legend-badge" style="background:#7DD3FC;color:#0C4A6E;">전세임대</span>
-      </div>
-    </div>
-    <div class="legend-divider"></div>
-    <div class="legend-group">
-      <span class="legend-dept-label" style="background:#FEF9E0;color:#7A5800;">공공임대부</span>
-      <div class="legend-types">
-        <span class="legend-badge" style="background:#F5D660;color:#5C3D00;">행복주택</span>
-        <span class="legend-badge" style="background:#EDB84A;color:#4A2800;">통합공공임대</span>
-        <span class="legend-badge" style="background:#F7E490;color:#5C3D00;">50년공공임대</span>
-        <span class="legend-badge" style="background:#FAF0C0;color:#6B4500;">국민(순환)임대</span>
-      </div>
-    </div>
-    <div class="legend-divider"></div>
-    <div class="legend-group">
-      <span class="legend-dept-label" style="background:#F0FDF4;color:#166534;">주거복지부</span>
-      <div class="legend-types">
-        <span class="legend-badge" style="background:#16A34A;color:#fff;">영구임대</span>
-      </div>
-    </div>
-  </div>
-
-
-  
-<!-- 오늘의 한 문장 -->
-  <div id="quoteBox" style="background:linear-gradient(135deg,#C9D6FF 0%,#E2E2E2 100%);border-radius:14px;box-shadow:var(--shadow);padding:20px 24px;overflow:hidden;">
-    
-    <div style="flex:1;position:relative;">
-      <div style="position:absolute;right:0;top:-4px;font-size:56px;opacity:0.08;color:#6366F1;line-height:1;font-family:Georgia,serif;">❝</div>
-      <div style="font-size:12px;font-weight:600;color:#9CA3AF;letter-spacing:0.5px;margin-bottom:6px;" id="quoteDate"></div>
-      <div style="font-size:14px;font-weight:500;color:#1A2840;line-height:1.8;margin-bottom:6px;" id="quoteText"></div>
-      <div style="font-size:12px;color:#6B7280;text-align:right;" id="quoteAuthor"></div>
-    </div>
-  </div>
 
   <!-- 문의 박스 -->
   <div style="background:white;border-radius:14px;box-shadow:var(--shadow);border:1px solid var(--bmc-border);padding:16px 22px;display:flex;align-items:center;gap:10px;">
     <span style="font-size:18px;">🐰</span>
     <div style="font-size:13px;color:var(--text-secondary);line-height:1.8;">
       <span style="font-weight:700;color:var(--text-primary);">업데이트 · 정보 수정 문의 🖥️</span><br>
-      맞춤임대부 인턴 <span style="font-weight:700;color:var(--bmc-blue);">박혜인</span>&nbsp;<span style="background:var(--bmc-light);color:var(--bmc-blue);padding:2px 10px;border-radius:6px;font-weight:700;font-size:13px;">305</span>
+      맞춤임대부 인턴 <span style="font-weight:700;color:var(--bmc-blue);">박혜인</span>&nbsp;<span style="background:#FFF8E7;color:#775537;padding:2px 10px;border-radius:6px;font-weight:700;font-size:13px;">305</span>
     </div>
   </div>
 
   <div style="text-align:center;padding:4px 0 20px;font-size:12px;color:#9BA8BA;letter-spacing:0.3px;line-height:2;">
-    임대요정 ver2.3<br>
-    마지막 업데이트 26.09.01
+    임대요정 ver2.4<br>
+    마지막 업데이트 26.10.07
   </div>
 
 </div>
@@ -359,8 +276,8 @@ const TYPE_STYLE = {
   "영구임대":       {bg:"#16A34A",color:"#fff"},
 };
 const DEPT_STYLE = {
-  "맞춤임대부": {bg:"#FAF5FF",color:"#6D28D9"},
-  "공공임대부": {bg:"#FEFAE8",color:"#7A5800"},
+  "맞춤임대부": {bg:"#EEF2FF",color:"#1B3A6B"},
+  "공공임대부": {bg:"#E8F4F3",color:"#2D6E6A"},
   "주거복지부": {bg:"#F0FDF4",color:"#166534"},
   "임대시설부": {bg:"#F0F9FF",color:"#0369A1"},
   "수납부":     {bg:"#FEF2F2",color:"#B91C1C"},
@@ -663,7 +580,7 @@ document.addEventListener("click", e => { if (!e.target.closest(".search-input-w
 
 // ── 오늘의 한 문장 ──
 (function() {
-  const QUOTES = [["무엇보다 자기 자신에게 거짓말하지 마라.","카라마조프가의 형제들 - 도스토옙스키"],["어제의 너보다 오늘 더 성장했어.","삼진그룹 영어토익반"],["가치 있는 일을 하는 데 있어서 너무 늦었거나 너무 빠른 건 없다.","벤자민 버튼의 시간은 거꾸로 간다"],["All is well.","세 얼간이"],["쓴맛을 못 느껴봤다면 달콤한 것도 달콤한 게 아니야.","바닐라 스카이"],["가장 중요한 건 보이지 않지.","어린왕자"],["뭐 계획대로 됐다고? 인생의 묘미는 계획대로 안 되는 거에 있어. 똑똑히 기억해둬!","짱구는 못말려 - 신형만"],["부서진 것은 고쳐야 해. 버리는 게 아니라.","완다비전 - 완다 막시모프"],["우리 모두 뭔가를 잃었어. 그렇다고 포기할 이유는 없어.","어벤져스 - 토르"],["우리가 선택하는 것이 우리가 누구인지를 보여줘. 능력보다 훨씬 더.","해리포터 - 덤블도어"],["행복은 항상 찾을 수 있어. 그걸 찾으려는 노력이 필요하지.","해리포터 - 덤블도어"],["삶은 초콜릿 상자 같은 거야. 어떤 게 나올지 절대 모르거든.","포레스트 검프"],["왜 넘어지는 걸까요? 다시 일어나는 법을 배우기 위해서죠.","배트맨 비긴즈 - 알프레드"],["안녕하세요, 제가 진짜 세상으로 나가도 될까요?","트루먼 쇼 - 트루먼"],["당신이 진정으로 무언가를 원한다면, 온 우주가 당신을 도울 것이다.","파울로 코엘료"],["우리는 모두 별에서 온 먼지다.","칼 세이건"],["가장 중요한 것은 눈에 보이지 않아. 마음으로만 볼 수 있어.","어린왕자"],["잘 모르겠으면 일단 자고 생각하자.","작자 미상"]];
+  const QUOTES = [["진심으로 사랑하는 사람은 많지 않다.", "제인 오스틴, 《오만과 편견》"], ["사람은 태어난 한 번만이 아니라, 살아가는 동안 여러 번 자신을 다시 만들어낸다.", "가브리엘 가르시아 마르케스, 《콜레라 시대의 사랑》"], ["좋은 사람을 찾는 것보다, 나보다 더 친절하고 너그러운 사람을 알아보고 곁에 두는 것이 더 중요하다.", "한야 야나기하라, 《리틀 라이프》"], ["사랑은 때로 우리를 기다리게 하지만, 기다림 끝에는 뜻밖의 기쁨이 찾아온다.", "셜리 잭슨, 《힐 하우스의 유령》"], ["꿈 때문에 지금 살아 있는 시간을 놓쳐서는 안 된다.", "J. K. 롤링, 《해리 포터》"], ["우리는 모두 같은 현실에 발을 딛고 있지만, 누군가는 별을 바라본다.", "오스카 와일드, 《윈더미어 부인의 부채》"], ["마음속에 말하지 못한 이야기를 품고 사는 것보다 괴로운 일은 없다.", "마야 안젤루, 《나는 갇힌 새가 왜 노래하는지 안다》"], ["길을 헤맨다고 해서 모두 길을 잃은 것은 아니다.", "J. R. R. 톨킨, 《반지의 제왕》"], ["완벽할 필요가 없어지는 순간, 비로소 잘 살아갈 수 있다.", "존 스타인벡, 《에덴의 동쪽》"], ["집만 한 곳이 없다.", "《오즈의 마법사》"], ["그냥 계속 헤엄쳐. 길을 잃었으면? 일단 계속 가자. 멈춰 있으면 더 찾기 어렵다.", "《니모를 찾아서》"], ["너를 정의하는 것은 누가 너를 사랑하느냐가 아니라, 네가 무엇을 사랑하느냐이다.", "《월플라워》"], ["인생에서 배울 가장 위대한 것은 사랑하고, 사랑받는 것이다.", "《물랑 루즈》"], ["나는 그루트다.", "그루트, 《가디언즈 오브 갤럭시》"], ["우리의 영혼이 무엇으로 이루어졌든, 그의 것과 나의 것은 같은 것이다.", "에밀리 브론테, 《폭풍의 언덕》"], ["다정한 마음만큼 사람을 매력적으로 만드는 것은 없다.", "제인 오스틴, 《엠마》"], ["완벽할 필요가 없어졌으니, 이제 좋은 사람이 될 수 있다.", "존 스타인벡, 《에덴의 동쪽》"], ["희망은 깃털을 가진 것처럼 가볍게 우리 안에 머문다.", "에밀리 디킨슨"]];
   const now = new Date();
   const y = String(now.getFullYear()).slice(2);
   const m = String(now.getMonth()+1).padStart(2,'0');
@@ -679,6 +596,27 @@ document.addEventListener("click", e => { if (!e.target.closest(".search-input-w
 })();
 
 renderNotices();
+
+  // ── 오늘의 책 한줄 ──
+  function initBook(){
+    var days=['일','월','화','수','목','금','토'];
+    var now=new Date();
+    var yy=String(now.getFullYear()).slice(2);
+    var mm=String(now.getMonth()+1).padStart(2,'0');
+    var dd=String(now.getDate()).padStart(2,'0');
+    var day=days[now.getDay()];
+    var dateEl=document.getElementById('bookDate');
+    if(dateEl) dateEl.textContent=yy+'.'+mm+'.'+dd+' ('+day+')';
+    var seed=now.getFullYear()*10000+(now.getMonth()+1)*100+now.getDate();
+    var idx=seed%QUOTES.length;
+    var q=QUOTES[idx];
+    var tEl=document.getElementById('bookText');
+    var aEl=document.getElementById('bookAuthor');
+    if(tEl) tEl.textContent='❝  '+q[0]+'  ❞';
+    if(aEl) aEl.textContent='— '+q[1];
+  }
+  window.addEventListener('load', initBook);
+
 </script>
 </body>
 </html>
