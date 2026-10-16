@@ -205,56 +205,61 @@ header:hover .header-home-hint{opacity:1;}
   <div id="resultsSection" class="results-section" style="display:none"></div>
 
 
-  <div id="memoSection" style="background:white;border-radius:14px;border:0.5px solid #BFDBFE;overflow:hidden;">
-    <div style="background:#1B3A6B;padding:13px 20px;display:flex;align-items:center;gap:10px;">
-      <span style="font-size:16px;">📝</span>
-      <span style="font-size:14px;font-weight:600;color:white;">메모</span>
-      <span style="margin-left:auto;font-size:11px;color:rgba(255,255,255,0.55);" id="memoSavedTime"></span>
-    </div>
-    <div style="padding:16px 20px 18px;display:flex;flex-direction:column;gap:10px;">
-      <textarea id="memoArea"
-        placeholder="여기에 메모를 입력하세요. 저장하면 다음에 열어도 그대로 남아있어요 🙂"
-        style="width:100%;min-height:110px;border:1px solid #BFDBFE;border-radius:10px;padding:12px 14px;font-size:14px;font-family:inherit;color:#1a1a1a;resize:vertical;outline:none;box-sizing:border-box;line-height:1.7;background:#FAFCFF;"
-        onfocus="this.style.borderColor='#1B3A6B'"
-        onblur="this.style.borderColor='#BFDBFE'"
-      ></textarea>
-      <div style="display:flex;justify-content:flex-end;gap:8px;">
-        <button onclick="clearMemo()" style="padding:7px 16px;border-radius:8px;border:1px solid #BFDBFE;background:white;color:#6B7EA8;font-size:13px;font-family:inherit;cursor:pointer;">지우기</button>
-        <button onclick="saveMemo()" style="padding:7px 20px;border-radius:8px;border:none;background:#1B3A6B;color:white;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;">💾 저장</button>
+<!-- 넓은화면: 메모(왼쪽) + 책한줄(오른쪽) 2열 / 좁은화면: 세로 쌓임 -->
+  <div style="display:flex;gap:16px;align-items:stretch;flex-wrap:wrap;">
+
+    <!-- 메모 -->
+    <div id="memoSection" style="flex:1 1 260px;min-width:0;background:white;border-radius:14px;border:0.5px solid #BFDBFE;overflow:visible;">
+      <div style="background:#1B3A6B;padding:13px 20px;display:flex;align-items:center;gap:10px;border-radius:14px 14px 0 0;">
+        <span style="font-size:16px;">📝</span>
+        <span style="font-size:14px;font-weight:600;color:white;">메모</span>
+        <span style="margin-left:auto;font-size:11px;color:rgba(255,255,255,0.55);" id="memoSavedTime"></span>
+      </div>
+      <div style="padding:16px 20px 18px;display:flex;flex-direction:column;gap:10px;">
+        <textarea id="memoArea"
+          placeholder="여기에 메모를 입력하세요. 저장하면 다음에 열어도 그대로 남아있어요 🙂"
+          style="width:100%;min-height:100px;border:1px solid #BFDBFE;border-radius:10px;padding:12px 14px;font-size:14px;font-family:inherit;color:#1a1a1a;resize:none;outline:none;box-sizing:border-box;line-height:1.7;background:#FAFCFF;overflow:hidden;display:block;"
+          onfocus="this.style.borderColor='#1B3A6B'"
+          onblur="this.style.borderColor='#BFDBFE'"
+          oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"
+        ></textarea>
+        <div style="display:flex;justify-content:flex-end;gap:8px;">
+          <button onclick="clearMemo()" style="padding:7px 16px;border-radius:8px;border:1px solid #BFDBFE;background:white;color:#6B7EA8;font-size:13px;font-family:inherit;cursor:pointer;">지우기</button>
+          <button onclick="saveMemo()" style="padding:7px 20px;border-radius:8px;border:none;background:#1B3A6B;color:white;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;">💾 저장</button>
+        </div>
       </div>
     </div>
+
+    <!-- 오늘의 책 한 줄 -->
+    <div id="bookSection" style="flex:1 1 260px;min-width:0;background:#FFFDF5;border-radius:14px;border:1px solid #EDD98A;overflow:hidden;position:relative;display:flex;flex-direction:column;">
+      <!-- 앰버 사이드 라인 -->
+      <div style="position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(to bottom,#D4960A,#F0C040);border-radius:14px 0 0 14px;"></div>
+      <div style="padding:12px 18px 12px 24px;display:flex;align-items:center;gap:9px;border-bottom:1px solid #F0E4A0;flex-shrink:0;">
+        <span style="font-size:15px;">🧋</span>
+        <span style="font-size:13px;font-weight:600;color:#8A6A00;font-family:'Noto Serif KR',Georgia,serif;letter-spacing:0.3px;">오늘의 책 한 줄</span>
+        <span style="margin-left:auto;font-size:10.5px;color:#C4A840;" id="bookDate"></span>
+      </div>
+      <div style="padding:18px 20px 18px 26px;flex:1;">
+        <div style="font-size:10px;font-weight:600;color:#C49A10;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:10px;">Today's line</div>
+        <div style="font-size:14.5px;color:#2C2410;line-height:2.05;font-family:'Noto Serif KR',Georgia,serif;" id="bookText"></div>
+        <div style="margin-top:14px;text-align:right;" id="bookAuthor"></div>
+      </div>
+    </div>
+
   </div>
 
-<!-- 오늘의 책 한줄 -->
-  <div id="bookSection" style="background:#FFFDF5;border-radius:14px;border:1px solid #EDD98A;overflow:hidden;position:relative;">
-    <!-- 앰버 사이드 라인 -->
-    <div style="position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(to bottom,#D4960A,#F0C040);border-radius:14px 0 0 14px;"></div>
-    <div style="padding:12px 18px 12px 24px;display:flex;align-items:center;gap:9px;border-bottom:1px solid #F0E4A0;">
-      <span style="font-size:15px;">🧋</span>
-      <span style="font-size:13px;font-weight:600;color:#8A6A00;font-family:'Noto Serif KR',Georgia,serif;letter-spacing:0.3px;">오늘의 책 한줄</span>
-      <span style="margin-left:auto;font-size:10.5px;color:#C4A840;" id="bookDate"></span>
+  <!-- 문의 + 버전 -->
+  <div style="display:flex;gap:16px;align-items:stretch;flex-wrap:wrap;">
+    <div style="flex:2 1 260px;min-width:0;background:white;border-radius:14px;box-shadow:var(--shadow);border:1px solid var(--bmc-border);padding:16px 22px;display:flex;align-items:center;gap:10px;">
+      <span style="font-size:18px;">🐰</span>
+      <div style="font-size:13px;color:var(--text-secondary);line-height:1.8;">
+        <span style="font-weight:700;color:var(--text-primary);">업데이트 · 정보 수정 문의 🖥️</span><br>
+        맞춤임대부 인턴 <span style="font-weight:700;color:var(--bmc-blue);">박혜인</span>&nbsp;<span style="background:#FFF8E7;color:#775537;padding:2px 10px;border-radius:6px;font-weight:700;font-size:13px;">305</span>
+      </div>
     </div>
-    <div style="padding:18px 20px 18px 26px;">
-      <div style="font-size:10px;font-weight:600;color:#C49A10;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:10px;">Today's line</div>
-      <div style="font-size:14.5px;color:#2C2410;line-height:2.05;font-family:'Noto Serif KR',Georgia,serif;" id="bookText"></div>
-      <div style="margin-top:14px;text-align:right;" id="bookAuthor"></div>
+    <div style="flex:1 1 160px;min-width:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:10px 0;font-size:12px;color:#9BA8BA;letter-spacing:0.3px;line-height:2;">
+      임대요정 ver2.4<br>마지막 업데이트 26.10.07
     </div>
-  </div>
-
-  
-
-  <!-- 문의 박스 -->
-  <div style="background:white;border-radius:14px;box-shadow:var(--shadow);border:1px solid var(--bmc-border);padding:16px 22px;display:flex;align-items:center;gap:10px;">
-    <span style="font-size:18px;">🐰</span>
-    <div style="font-size:13px;color:var(--text-secondary);line-height:1.8;">
-      <span style="font-weight:700;color:var(--text-primary);">업데이트 · 정보 수정 문의 🖥️</span><br>
-      맞춤임대부 인턴 <span style="font-weight:700;color:var(--bmc-blue);">박혜인</span>&nbsp;<span style="background:#FFF8E7;color:#775537;padding:2px 10px;border-radius:6px;font-weight:700;font-size:13px;">305</span>
-    </div>
-  </div>
-
-  <div style="text-align:center;padding:4px 0 20px;font-size:12px;color:#9BA8BA;letter-spacing:0.3px;line-height:2;">
-    임대요정 ver2.4<br>
-    마지막 업데이트 26.10.07
   </div>
 
 </div>
@@ -605,25 +610,26 @@ document.addEventListener("click", e => { if (!e.target.closest(".search-input-w
 
 // ── 오늘의 한 문장 ──
 
+// QUOTES: [한글문장, 출처, 영문원문(없으면 "")]
 const QUOTES = [
-  ["진심으로 사랑하는 사람은 많지 않다.", "제인 오스틴, 《오만과 편견》"],
-  ["사람은 태어난 한 번만이 아니라, 살아가는 동안 여러 번 자신을 다시 만들어낸다.", "가브리엘 가르시아 마르케스, 《콜레라 시대의 사랑》"],
-  ["좋은 사람을 찾는 것보다, 나보다 더 친절하고 너그러운 사람을 알아보고 곁에 두는 것이 더 중요하다.", "한야 야나기하라, 《리틀 라이프》"],
-  ["사랑은 때로 우리를 기다리게 하지만, 기다림 끝에는 뜻밖의 기쁨이 찾아온다.", "셜리 잭슨, 《힐 하우스의 유령》"],
-  ["꿈을 꾸는 것도 중요하지만, 꿈 때문에 지금 살아 있는 시간을 놓쳐서는 안 된다.", "J. K. 롤링, 《해리 포터》"],
-  ["우리는 모두 같은 현실에 발을 딛고 있지만, 누군가는 별을 바라본다.", "오스카 와일드, 《윈더미어 부인의 부채》"],
-  ["마음속에 말하지 못한 이야기를 품고 사는 것보다 괴로운 일은 없다.", "마야 안젤루, 《나는 갇힌 새가 왜 노래하는지 안다》"],
-  ["길을 헤맨다고 해서 모두 길을 잃은 것은 아니다.", "J. R. R. 톨킨, 《반지의 제왕》"],
-  ["완벽할 필요가 없어지는 순간, 비로소 잘 살아갈 수 있다.", "존 스타인벡, 《에덴의 동쪽》"],
-  ["집만 한 곳이 없다.", "《오즈의 마법사》"],
-  ["그냥 계속 헤엄쳐. 길을 잃었으면? 일단 계속 가자. 멈춰 있으면 더 찾기 어렵다.", "《니모를 찾아서》"],
-  ["너를 정의하는 것은 누가 너를 사랑하느냐가 아니라, 네가 무엇을 사랑하느냐이다.", "《월플라워》"],
-  ["인생에서 배울 가장 위대한 것은 사랑하고, 사랑받는 것이다.", "《물랑 루즈》"],
-  ["나는 그루트다.", "그루트, 《가디언즈 오브 갤럭시》"],
-  ["우리의 영혼이 무엇으로 이루어졌든, 그의 것과 나의 것은 같은 것이다.", "에밀리 브론테, 《폭풍의 언덕》"],
-  ["다정한 마음만큼 사람을 매력적으로 만드는 것은 없다.", "제인 오스틴, 《엠마》"],
-  ["완벽할 필요가 없어졌으니, 이제 좋은 사람이 될 수 있다.", "존 스타인벡, 《에덴의 동쪽》"],
-  ["희망은 깃털을 가진 것처럼 가볍게 우리 안에 머문다.", "에밀리 디킨슨"]
+  ["진심으로 사랑하는 사람은 많지 않다.", "제인 오스틴, 《오만과 편견》", "There are few people whom I really love…"],
+  ["우리는 모두 같은 현실에 발을 딛고 있지만, 누군가는 별을 바라본다.", "오스카 와일드, 《윈더미어 부인의 부채》", "We are all in the gutter, but some of us are looking at the stars."],
+  ["마음속에 말하지 못한 이야기를 품고 사는 것보다 괴로운 일은 없다.", "마야 안젤루, 《나는 갇힌 새가 왜 노래하는지 안다》", "There is no greater agony than bearing an untold story inside you."],
+  ["길을 헤맨다고 해서 모두 길을 잃은 것은 아니다.", "J. R. R. 톨킨, 《반지의 제왕》", "Not all those who wander are lost."],
+  ["완벽할 필요가 없어지는 순간, 비로소 잘 살아갈 수 있다.", "존 스타인벡, 《에덴의 동쪽》", "And now that you don't have to be perfect, you can be good."],
+  ["집만 한 곳이 없다.", "《오즈의 마법사》", "There's no place like home."],
+  ["너를 정의하는 것은 누가 너를 사랑하느냐가 아니라, 네가 무엇을 사랑하느냐이다.", "《월플라워》", "You are what you love, not what loves you."],
+  ["인생에서 배울 가장 위대한 것은 사랑하고, 사랑받는 것이다.", "《물랑 루즈》", "The greatest thing you'll ever learn is just to love and be loved in return."],
+  ["나는 그루트다.", "그루트, 《가디언즈 오브 갤럭시》", "I am Groot."],
+  ["우리의 영혼이 무엇으로 이루어졌든, 그의 것과 나의 것은 같은 것이다.", "에밀리 브론테, 《폭풍의 언덕》", "Whatever our souls are made of, his and mine are the same."],
+  ["다정한 마음만큼 사람을 매력적으로 만드는 것은 없다.", "제인 오스틴, 《엠마》", "There is no charm equal to tenderness of heart."],
+  ["완벽할 필요가 없어졌으니, 이제 좋은 사람이 될 수 있다.", "존 스타인벡, 《에덴의 동쪽》", "And now that you don't have to be perfect, you can be good."],
+  ["희망은 깃털을 가진 것처럼 가볍게 우리 안에 머문다.", "에밀리 디킨슨", "Hope is the thing with feathers."],
+  ["사람은 태어난 한 번만이 아니라, 살아가는 동안 여러 번 자신을 다시 만들어낸다.", "가브리엘 가르시아 마르케스, 《콜레라 시대의 사랑》", ""],
+  ["좋은 사람을 찾는 것보다, 나보다 더 친절하고 너그러운 사람을 알아보고 곁에 두는 것이 더 중요하다.", "한야 야나기하라, 《리틀 라이프》", ""],
+  ["사랑은 때로 우리를 기다리게 하지만, 기다림 끝에는 뜻밖의 기쁨이 찾아온다.", "셜리 잭슨, 《힐 하우스의 유령》", ""],
+  ["꿈을 꾸는 것도 중요하지만, 꿈 때문에 지금 살아 있는 시간을 놓쳐서는 안 된다.", "J. K. 롤링, 《해리 포터》", ""],
+  ["어떤 이유에서건 더 이상 자신을 다그치지 않는 곳으로 가세요.", "로렌스 크레인, 《자기 사랑》", ""]
 ];
 renderNotices();
 
@@ -637,12 +643,20 @@ renderNotices();
     var day=days[now.getDay()];
     var dateEl=document.getElementById('bookDate');
     if(dateEl) dateEl.textContent=yy+'.'+mm+'.'+dd+' ('+day+')';
+    // 날짜 시드로 오늘 기본 인덱스 계산
     var seed=now.getFullYear()*10000+(now.getMonth()+1)*100+now.getDate();
-    var idx=seed%QUOTES.length;
-    var q=QUOTES[idx];
+    var todayIdx=seed%QUOTES.length;
+    // 오늘 인덱스를 제외한 나머지에서 랜덤 선택
+    var pool=[];
+    for(var i=0;i<QUOTES.length;i++){ if(i!==todayIdx) pool.push(i); }
+    var pick=pool[Math.floor(Math.random()*pool.length)];
+    var q=QUOTES[pick];
     var tEl=document.getElementById('bookText');
     var aEl=document.getElementById('bookAuthor');
-    if(tEl) tEl.textContent='❝  '+q[0]+'  ❞';
+    if(tEl){
+      var eng = q[2] ? '<div style="margin-top:8px;font-size:12px;color:#B8A06A;font-style:italic;font-family:Georgia,serif;line-height:1.7;letter-spacing:0.2px;">' + q[2] + '</div>' : '';
+      tEl.innerHTML = '<span style="font-family:\'Noto Serif KR\',Georgia,serif;">❝  '+q[0]+'  ❞</span>' + eng;
+    }
     if(aEl) aEl.innerHTML='<span style="font-size:11.5px;color:#8A6A00;font-style:italic;font-family:Georgia,\'Noto Serif KR\',serif;letter-spacing:0.3px;border-top:1px solid #D4B060;padding-top:8px;display:inline-block;">— '+q[1]+'</span>';
   }
   initBook();
@@ -656,7 +670,7 @@ renderNotices();
     // 불러오기
     try {
       var saved = localStorage.getItem('bmc_memo');
-      if(saved) area.value = saved;
+      if(saved){ area.value = saved; area.style.height='auto'; area.style.height=area.scrollHeight+'px'; }
       var t = localStorage.getItem('bmc_memo_time');
       if(t && timeEl) timeEl.textContent = '저장: ' + t;
     } catch(e){}
