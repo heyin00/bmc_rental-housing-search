@@ -643,13 +643,19 @@ renderNotices();
     var day=days[now.getDay()];
     var dateEl=document.getElementById('bookDate');
     if(dateEl) dateEl.textContent=yy+'.'+mm+'.'+dd+' ('+day+')';
-    // 날짜 시드로 오늘 기본 인덱스 계산
-    var seed=now.getFullYear()*10000+(now.getMonth()+1)*100+now.getDate();
-    var todayIdx=seed%QUOTES.length;
-    // 오늘 인덱스를 제외한 나머지에서 랜덤 선택
-    var pool=[];
-    for(var i=0;i<QUOTES.length;i++){ if(i!==todayIdx) pool.push(i); }
-    var pick=pool[Math.floor(Math.random()*pool.length)];
+    // 오늘 날짜 기반 고정 문장 또는 특별 지정
+    var todayKey=now.getFullYear()*10000+(now.getMonth()+1)*100+now.getDate();
+    var pinnedToday={20261016:17}; // 날짜:QUOTES인덱스 (17=로렌스 크레인)
+    var pick;
+    if(pinnedToday[todayKey]!==undefined){
+      pick=pinnedToday[todayKey];
+    } else {
+      var seed=todayKey;
+      var todayIdx=seed%QUOTES.length;
+      var pool=[];
+      for(var i=0;i<QUOTES.length;i++){ if(i!==todayIdx) pool.push(i); }
+      pick=pool[Math.floor(Math.random()*pool.length)];
+    }
     var q=QUOTES[pick];
     var tEl=document.getElementById('bookText');
     var aEl=document.getElementById('bookAuthor');
