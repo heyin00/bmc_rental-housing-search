@@ -230,17 +230,17 @@ header:hover .header-home-hint{opacity:1;}
     </div>
 
     <!-- 오늘의 책 한 줄 -->
-    <div id="bookSection" style="background:#FFFDF5;border-radius:14px;border:1px solid #EDD98A;overflow:hidden;position:relative;display:flex;flex-direction:column;">
-      <!-- 앰버 사이드 라인 -->
-      <div style="position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(to bottom,#D4960A,#F0C040);border-radius:14px 0 0 14px;"></div>
-      <div style="padding:12px 18px 12px 24px;display:flex;align-items:center;gap:9px;border-bottom:1px solid #F0E4A0;flex-shrink:0;">
-        <span style="font-size:15px;">🧋</span>
-        <span style="font-size:13px;font-weight:600;color:#8A6A00;font-family:'Noto Serif KR',Georgia,serif;letter-spacing:0.3px;">오늘의 책 한 줄</span>
-        <span style="margin-left:auto;font-size:10.5px;color:#C4A840;" id="bookDate"></span>
+    <div id="bookSection" style="background:#FFFAFC;border-radius:14px;border:1px solid #F9D5DF;overflow:hidden;position:relative;display:flex;flex-direction:column;">
+      <!-- 핑크 사이드 라인 -->
+      <div style="position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(to bottom,#F4AABF,#FAD0DB);border-radius:14px 0 0 14px;"></div>
+      <div style="padding:12px 18px 12px 24px;display:flex;align-items:center;gap:9px;border-bottom:1px solid #FCEEF2;flex-shrink:0;">
+        <span style="font-size:15px;">📖</span>
+        <span style="font-size:13px;font-weight:600;color:#C4728A;font-family:'Noto Serif KR',Georgia,serif;letter-spacing:0.3px;">오늘의 책 한 줄</span>
+        <span style="margin-left:auto;font-size:10.5px;color:#F0B8C8;" id="bookDate"></span>
       </div>
       <div style="padding:18px 20px 18px 26px;flex:1;">
-        <div style="font-size:10px;font-weight:600;color:#C49A10;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:10px;">Today's line</div>
-        <div style="font-size:14.5px;color:#2C2410;line-height:2.05;font-family:'Noto Serif KR',Georgia,serif;" id="bookText"></div>
+        <div style="font-size:10px;font-weight:600;color:#D898AC;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:10px;">Today's line</div>
+        <div style="font-size:14.5px;color:#2C1A22;line-height:2.05;font-family:'Noto Serif KR',Georgia,serif;" id="bookText"></div>
         <div style="margin-top:14px;text-align:right;" id="bookAuthor"></div>
       </div>
     </div>
@@ -641,25 +641,44 @@ renderNotices();
     var day=days[now.getDay()];
     var dateEl=document.getElementById('bookDate');
     if(dateEl) dateEl.textContent=yy+'.'+mm+'.'+dd+' ('+day+')';
-    // 오늘 날짜 기반 고정 문장 (날짜가 같으면 항상 같은 문장)
+    // 오늘 날짜 기반 고정 문장 — 하루에 하나, 안 본 것 우선
     var todayKey=now.getFullYear()*10000+(now.getMonth()+1)*100+now.getDate();
-    var pinnedToday={20261016:17}; // 날짜:QUOTES인덱스 (17=로렌스 크레인)
+    var pinnedToday={20261016:17}; // 날짜:QUOTES인덱스 (특별 지정일)
     var pick;
     if(pinnedToday[todayKey]!==undefined){
-      // 특별 지정 날짜
       pick=pinnedToday[todayKey];
     } else {
-      // 날짜 시드만으로 결정 — 새 창을 열어도 같은 문장
-      pick=todayKey%QUOTES.length;
+      // localStorage에서 오늘 캐시 확인 → 오늘 이미 결정됐으면 그대로
+      var cached=null;
+      try{ var c=localStorage.getItem('bmc_book_cache'); if(c){var obj=JSON.parse(c);if(obj.date===todayKey)cached=obj.pick;} }catch(e){}
+      if(cached!==null){
+        pick=cached;
+      } else {
+        // 본 적 없는 인덱스 우선 선택
+        var seen=[];
+        try{ var s=localStorage.getItem('bmc_book_seen'); if(s) seen=JSON.parse(s); }catch(e){}
+        // seen이 아닌 인덱스 pool
+        var unseen=[];
+        for(var i=0;i<QUOTES.length;i++){ if(seen.indexOf(i)===-1) unseen.push(i); }
+        // 다 봤으면 초기화
+        if(unseen.length===0){ seen=[]; unseen=QUOTES.map(function(_,i){return i;}); }
+        // 날짜 시드로 unseen 중 하나 결정 (같은 날이면 항상 같은 결과)
+        pick=unseen[todayKey%unseen.length];
+        // 오늘 본 것으로 기록
+        if(seen.indexOf(pick)===-1) seen.push(pick);
+        try{ localStorage.setItem('bmc_book_seen',JSON.stringify(seen)); }catch(e){}
+        // 오늘 캐시 저장
+        try{ localStorage.setItem('bmc_book_cache',JSON.stringify({date:todayKey,pick:pick})); }catch(e){}
+      }
     }
     var q=QUOTES[pick];
     var tEl=document.getElementById('bookText');
     var aEl=document.getElementById('bookAuthor');
     if(tEl){
-      var eng = q[2] ? '<div style="margin-top:8px;font-size:12px;color:#B8A06A;font-style:italic;font-family:Georgia,serif;line-height:1.7;letter-spacing:0.2px;">' + q[2] + '</div>' : '';
+      var eng = q[2] ? '<div style="margin-top:8px;font-size:12px;color:#F0C0CE;font-style:italic;font-family:Georgia,serif;line-height:1.7;letter-spacing:0.2px;">' + q[2] + '</div>' : '';
       tEl.innerHTML = '<span style="font-family:\'Noto Serif KR\',Georgia,serif;">❝  '+q[0]+'  ❞</span>' + eng;
     }
-    if(aEl) aEl.innerHTML='<span style="font-size:11.5px;color:#8A6A00;font-style:italic;font-family:Georgia,\'Noto Serif KR\',serif;letter-spacing:0.3px;border-top:1px solid #D4B060;padding-top:8px;display:inline-block;">— '+q[1]+'</span>';
+    if(aEl) aEl.innerHTML='<span style="font-size:11.5px;color:#C4728A;font-style:italic;font-family:Georgia,\'Noto Serif KR\',serif;letter-spacing:0.3px;border-top:1px solid #F9D5DF;padding-top:8px;display:inline-block;">— '+q[1]+'</span>';
   }
   initBook();
 
